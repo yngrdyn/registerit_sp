@@ -1,13 +1,13 @@
-import * as React from 'react';
-import styles from './RegisterId.module.scss';
-import { IRegisterIdProps } from './IRegisterIdProps';
-import { sp } from '@pnp/sp';
-import { useState, useEffect } from 'react';
 import { SPHttpClient, SPHttpClientResponse } from "@microsoft/sp-http";
+import { sp } from '@pnp/sp';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { ISPListTeams, ITeam } from '../models/team';
+import { IRegisterIdProps } from './IRegisterIdProps';
+import styles from './RegisterId.module.scss';
 import TeamCard from './team-card/TeamCard';
-import Teams from './teams/Teams';
 import TeamForm from './team-form/TeamForm';
+import Teams from './teams/Teams';
 
 const descending = (a, b)=> {
   if ( a.Modified > b.Modified ){
@@ -20,9 +20,9 @@ const descending = (a, b)=> {
 }
  
 const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, context, spHttpClient, siteUrl, listName }: IRegisterIdProps) => {
-  const [teams, setTeams] = useState([])
-  const [userId, setUserId] = useState()
-  const [myTeam, setMyTeam] = useState<ITeam>()
+  const [teams, setTeams] = useState([]);
+  const [userId, setUserId] = useState();
+  const [myTeam, setMyTeam] = useState<ITeam>();
   const [loading, setLoading] = useState(true);
   const [loadingTeam, setLoadingTeam] = useState(true);
   
@@ -58,7 +58,7 @@ const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, co
   
   const getTeams = (): void => {
     setLoading(true);
-    setLoading(true);
+    setLoadingTeam(true);
     setTeams([]);
     spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${listName}')/items`,  
     SPHttpClient.configurations.v1,  

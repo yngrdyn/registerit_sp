@@ -9,19 +9,23 @@ import TeamForm from '../team-form/TeamForm';
 
 export interface TeamCardProps extends ITeam, IRegisterIdProps {
   reloadTeams: () => void;
-}
+};
  
 const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, MembersId, Title, Project_x0020_link, context, siteUrl, spHttpClient, description, listName, reloadTeams }: TeamCardProps) => {
   const [editMode, setEditMode] = useState(false);
 
   const enableEdit = () => {
     setEditMode(true);
-  }
+  };
 
   const reloadTeamsAndReset = () => {
     reloadTeams();
     setEditMode(false);
-  }
+  };
+
+  const cancelUpdate = () => {
+    setEditMode(false);
+  };
 
   return (
     <>
@@ -68,6 +72,7 @@ const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, Mem
         description={description}
         listName={listName}
         reloadTeams={reloadTeamsAndReset}
+        cancelUpdate={cancelUpdate}
       ></TeamForm>
     }
   </>

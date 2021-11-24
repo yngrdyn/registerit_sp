@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IRegisterIdProps } from '../IRegisterIdProps';
 import styles from './TeamForm.module.scss';
-import { PrimaryButton, TextField } from 'office-ui-fabric-react';
+import { DefaultButton, PrimaryButton, TextField } from 'office-ui-fabric-react';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { useState, useEffect } from 'react';
 import { sp } from '@pnp/sp';
@@ -15,10 +15,11 @@ export interface TeamFormProps extends IRegisterIdProps {
 	MembersId?: number[];
 	Project_x0020_link?: { Description: string; Url: string };
   reloadTeams: () => void;
+  cancelUpdate?: () => void;
 }
  
 const TeamForm: React.FunctionComponent<TeamFormProps> =
-  ({ Id, Description, MembersId, Title, Project_x0020_link, context, siteUrl, spHttpClient, listName, reloadTeams }: TeamFormProps) => {
+  ({ Id, Description, MembersId, Title, Project_x0020_link, context, siteUrl, spHttpClient, listName, reloadTeams, cancelUpdate }: TeamFormProps) => {
     const [members, setMembers] = useState(MembersId ?? []);
     const [name, setName] = useState(Title);
     const [url, setUrl] = useState<{ Description: string; Url: string}>(Project_x0020_link);
@@ -195,14 +196,17 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
             />
           }
           { Id &&
-            <PrimaryButton
-              text="Update team"
-              className={ styles.save }
-              allowDisabledFocus
-              style={{backgroundColor:'#0078d4', border: 'none'}}
-              onClick={updateTeam}
-              disabled={disabled}
-            />
+            <>
+              <DefaultButton className={ styles.cancel } text="Cancel" allowDisabledFocus onClick={cancelUpdate}/>
+              <PrimaryButton
+                text="Update team"
+                className={ styles.save }
+                allowDisabledFocus
+                style={{backgroundColor:'#0078d4', border: 'none'}}
+                onClick={updateTeam}
+                disabled={disabled}
+              />
+            </>
           }
         </div>
       </>

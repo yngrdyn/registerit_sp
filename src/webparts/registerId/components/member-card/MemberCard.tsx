@@ -15,8 +15,8 @@ const personaStyles = {
 }
  
 const MemberCard: React.FunctionComponent<MemberCardProps> = ({ Id, context, spHttpClient, siteUrl }: MemberCardProps) => {
-  const [userId, _] = useState(Id)
-  const [user, setUser] = useState<{Email: string; Title: string;}>()
+  const [userId, _] = useState(Id);
+  const [user, setUser] = useState<{Email: string; Title: string;}>();
 
   useEffect(() => {
     sp.setup({

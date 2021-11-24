@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 import { MemberCardProps } from '../member-card/MemberCard';
 
 const Member: React.FunctionComponent<MemberCardProps> = ({ Id, context, spHttpClient, siteUrl }: MemberCardProps) => {
-  const [userId, _] = useState(Id)
-  const [user, setUser] = useState<{Email: string; Title: string;}>()
+  const [userId, _] = useState(Id);
+  const [user, setUser] = useState<{Email: string; Title: string;}>();
 
   useEffect(() => {
     sp.setup({
@@ -17,22 +17,22 @@ const Member: React.FunctionComponent<MemberCardProps> = ({ Id, context, spHttpC
   }, []);
 
   const getUser = (): void => {
-    spHttpClient.get(`${siteUrl}/_api/web/getuserbyid('${userId}')`,  
-    SPHttpClient.configurations.v1,  
+    spHttpClient.get(`${siteUrl}/_api/web/getuserbyid('${userId}')`,
+    SPHttpClient.configurations.v1,
     {
-      headers: {  
-        'Accept': 'application/json;odata=nometadata',  
-        'Content-type': 'application/json;odata=nometadata',  
-        'odata-version': ''  
+      headers: {
+        'Accept': 'application/json;odata=nometadata',
+        'Content-type': 'application/json;odata=nometadata',
+        'odata-version': '',
       },
-    })  
-    .then((response: SPHttpClientResponse): Promise<any> => response.json())  
+    })
+    .then((user: SPHttpClientResponse): Promise<any> => user.json())  
     .then((user: any): void => {
       setUser(user);
     })
-    .catch((error: any): void => setUser(undefined)); 
+    .catch((error: any): void => setUser(undefined));
   };
-  
+
   return (
     <div>
       <Persona
