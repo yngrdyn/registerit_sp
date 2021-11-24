@@ -1,0 +1,62 @@
+@import "~office-ui-fabric-react/dist/sass/References.scss";
+
+.teamForm {
+	.title {
+		@include ms-font-xl;
+		@include ms-fontColor-white;
+	}
+
+	h1 {
+		@include ms-font-xl;
+		@include ms-fontColor-white;
+		font-weight: 300;
+	}
+
+	.flex {
+		margin-top: 0;
+		display: flex;
+		align-items: center;
+		width: 100%;
+
+		p {
+			display: flex;
+
+			div {
+				width: 100%;
+			}
+		}
+
+		p:first-of-type {
+			margin: 5px 0;
+		}
+
+		p:last-of-type {
+			margin-left: 20px;
+			flex-grow: 1;
+		}
+	}
+
+	.picker {
+		margin-top: -15px;
+		margin-bottom: 50px;
+
+		label {
+			color: white;
+			font-weight: lighter;
+
+			&::after {
+				font-weight: bold;
+			}
+		}
+
+		> div > div > div > div {
+			background: white;
+		}
+	}
+
+	.save {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+	}
+}

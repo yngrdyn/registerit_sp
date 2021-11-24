@@ -1,0 +1,40 @@
+@import "~office-ui-fabric-react/dist/sass/References.scss";
+
+.teams {
+	margin-top: 40px;
+
+	h1 {
+		@include ms-fontColor-black;
+		font-weight: bold;
+		font-size: 1.5rem;
+	}
+
+	.table {
+		display: flex;
+		flex-direction: column;
+
+		.header {
+			.col {
+				background: rgb(0, 120, 212);
+				color: white;
+			}
+		}
+
+		.row {
+			display: flex;
+
+			&.odd {
+				.col {
+					background-color: #f5f5f5;
+				}
+			}
+		}
+
+		.col {
+			flex: 1;
+			padding: 10px;
+			background-color: white;
+			margin: 0 1px 0 1px;
+		}
+	}
+}

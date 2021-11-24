@@ -1,0 +1,54 @@
+@import "~office-ui-fabric-react/dist/sass/References.scss";
+
+.teamCard {
+	margin-top: 25px;
+
+	h1 {
+		@include ms-font-xl;
+		@include ms-fontColor-white;
+		font-weight: 300;
+	}
+
+	.title {
+		@include ms-font-xl;
+		@include ms-fontColor-white;
+	}
+
+	.members {
+		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: 50px;
+	}
+
+	.flex {
+		margin-top: 0;
+		display: flex;
+		align-items: center;
+
+		p:first-of-type {
+			margin: 5px 0;
+		}
+
+		p:last-of-type {
+			margin-left: 20px;
+
+			a {
+				color: white !important;
+
+				&:hover {
+					opacity: 0.7;
+				}
+			}
+		}
+	}
+
+	.column {
+		flex-direction: column;
+	}
+
+	.edit {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+	}
+}
