@@ -1,12 +1,12 @@
+import { SPHttpClient, SPHttpClientResponse } from "@microsoft/sp-http";
+import { sp } from '@pnp/sp';
+import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import { DefaultButton, Dialog, DialogFooter, DialogType, PrimaryButton, TextField, Toggle } from 'office-ui-fabric-react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { ITeam } from '../../models/team';
 import { IRegisterIdProps } from '../IRegisterIdProps';
 import styles from './TeamForm.module.scss';
-import { DefaultButton, PrimaryButton, TextField } from 'office-ui-fabric-react';
-import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
-import { useState, useEffect } from 'react';
-import { sp } from '@pnp/sp';
-import { SPHttpClient, SPHttpClientResponse } from "@microsoft/sp-http";
-import { ITeam } from '../../models/team';
 
 export interface TeamFormProps extends IRegisterIdProps {
   Title?: string;
@@ -14,12 +14,13 @@ export interface TeamFormProps extends IRegisterIdProps {
 	Description?: string;
 	MembersId?: number[];
 	Project_x0020_link?: { Description: string; Url: string };
+  AppFw?: boolean;
   reloadTeams: () => void;
   cancelUpdate?: () => void;
 }
  
 const TeamForm: React.FunctionComponent<TeamFormProps> =
-  ({ Id, Description, MembersId, Title, Project_x0020_link, context, siteUrl, spHttpClient, listName, reloadTeams, cancelUpdate }: TeamFormProps) => {
+  ({ Id, Description, MembersId, Title, Project_x0020_link, AppFw, context, siteUrl, spHttpClient, listName, reloadTeams, cancelUpdate }: TeamFormProps) => {
     const [members, setMembers] = useState(MembersId ?? []);
     const [name, setName] = useState(Title);
     const [url, setUrl] = useState<{ Description: string; Url: string}>(Project_x0020_link);
@@ -27,6 +28,9 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
     const [disabled, setDisabled] = useState(true);
     const [defaultMembers, setDefaultMembers] = useState([]);
     const [invalidUrl, setInvalidUrl] = useState(undefined);
+    const [appFw, setAppFw] = useState(AppFw);
+    const [showWarning, setShowWarning] = useState(false);
+    const [showLoadingPeople, setShowLoadingPeople] = useState(true);
 
     useEffect(() => {
       sp.setup({
@@ -53,6 +57,7 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
         'MembersId': members,
         'Description': desc,
         'Project_x0020_link': url,
+        'AppFw': appFw,
       }); 
 
       spHttpClient.post(`${siteUrl}/_api/web/lists/getbytitle('${listName}')/items`,  
@@ -75,7 +80,7 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
         setDesc(undefined);
         setMembers([]);
       }, (error: any): void => { });  
-    }
+    };
 
     const updateTeam = () => {
       const body: string = JSON.stringify({  
@@ -83,6 +88,7 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
         'MembersId': members,
         'Description': desc,
         'Project_x0020_link': url,
+        'AppFw': appFw,
       }); 
 
       spHttpClient.post(`${siteUrl}/_api/web/lists/getbytitle('${listName}')/items(${Id})`,  
@@ -99,9 +105,10 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
       })
       .then((response: SPHttpClientResponse): void => reloadTeams())
       .catch((error: any): void => { }); 
-    }
+    };
 
     const getDefaultMembers = () => {
+      setShowLoadingPeople(true);
       const filter = MembersId.map((member) => `(Id eq ${member})`).join(' or ');
       spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('User Information List')/items?$filter=${filter}`,
       SPHttpClient.configurations.v1,  
@@ -116,9 +123,12 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
       .then((response) => {
         const emails = response.value.map((user) => user.EMail);
         setDefaultMembers(emails);
+        setTimeout(() => {
+          setShowLoadingPeople(false);
+        }, emails.length * 250);
       })
       .catch((error: any): void => setDefaultMembers([]));
-    }
+    };
 
     const validateUrl = (str): boolean => {
       var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -128,30 +138,41 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
         '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
         '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
       return !!pattern.test(str);
-    }
+    };
 
     const getPeoplePickerItems = (items: any[]) => {
+      if (items.length > 6) {
+        setShowWarning(true);
+      }
       setMembers(items.map((item) => item.id));
-    }
+    };
 
     const setProjectName = (e) => {
-      setName(e.target?.value)
-    }
+      setName(e.target?.value);
+    };
 
     const setProjectDescription = (e) => {
-      setDesc(e.target?.value)
-    }
+      setDesc(e.target?.value);
+    };
 
     const setProjectUrl = (e) => {
-      const url = e.target.value;
-      if (validateUrl(url)) {
+      const userUrl = e.target.value;
+      if (validateUrl(userUrl)) {
         setInvalidUrl(undefined);
-        setUrl({ Description: url, Url: url})
+        setUrl({ Description: userUrl, Url: userUrl});
       } else {
-        setUrl({ Description: url, Url: url})
+        setUrl({ Description: userUrl, Url: userUrl});
         setInvalidUrl('Provide a valid URL');
       }
-    }
+    };
+
+    const setAppFwCategory = (e) => {
+      setAppFw(!appFw);
+    };
+
+    const closeModal = () => {
+      setShowWarning(false);
+    };
 
     return (
       <>
@@ -184,7 +205,13 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
               defaultSelectedUsers={defaultMembers}
               principalTypes={[PrincipalType.User]}
               resolveDelay={1000} />
+              { Id && showLoadingPeople && <div className={ styles.loadingIndicator }></div> }
           </p>
+          <div className= { styles.flex }>
+            <p className={ styles.title }>Dynatrace App?</p>
+            <p className={ styles.paddingTop }><Toggle label="" onText="Yes" offText="No" onChange={setAppFwCategory} defaultChecked={appFw}/></p>
+          </div>
+          <div className= { styles.flex } style={{marginTop: '-5px'}}><i>Want to know more about <a href='https://dynatrace.sharepoint.com/sites/Inno_Days/SitePages/Platform-Apps.aspx'>&nbsp;Dynatrace Apps?</a></i></div>
           { !Id &&
             <PrimaryButton
               text="Register team"
@@ -209,8 +236,32 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
             </>
           }
         </div>
+        <Dialog 
+          isOpen={showWarning} 
+          type={DialogType.close} 
+          onDismiss={closeModal}
+          title='You are about to go on free style mode' 
+          subText='' 
+          isBlocking={false} 
+          closeButtonAriaLabel='Close'  
+          maxWidth={'500px'}
+        > 
+          <p>
+            In order to include your project in voting mode your project has to include top 6 members.
+            Otherwise, your project will still participate in the event but in free style.
+            <br></br>
+          </p>
+          <DialogFooter> 
+            <PrimaryButton
+                text="Got it!"
+                allowDisabledFocus
+                onClick={closeModal}
+                disabled={disabled}
+              />
+          </DialogFooter> 
+        </Dialog>
       </>
-    )
+    );
   };
 
 export default TeamForm;

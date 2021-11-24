@@ -3,15 +3,15 @@ import { ITeam } from '../../models/team';
 import { IRegisterIdProps } from '../IRegisterIdProps';
 import MemberCard from '../member-card/MemberCard';
 import styles from './TeamCard.module.scss';
-import { DefaultButton } from 'office-ui-fabric-react';
+import { DefaultButton, Toggle } from 'office-ui-fabric-react';
 import { useState } from 'react';
 import TeamForm from '../team-form/TeamForm';
 
 export interface TeamCardProps extends ITeam, IRegisterIdProps {
   reloadTeams: () => void;
-};
+}
  
-const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, MembersId, Title, Project_x0020_link, context, siteUrl, spHttpClient, description, listName, reloadTeams }: TeamCardProps) => {
+const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, MembersId, Title, Project_x0020_link, AppFw, context, siteUrl, spHttpClient, description, listName, reloadTeams }: TeamCardProps) => {
   const [editMode, setEditMode] = useState(false);
 
   const enableEdit = () => {
@@ -56,6 +56,11 @@ const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, Mem
               ></MemberCard>)
           }
         </div>
+        <div className= { styles.flex }>
+          <p className={ styles.title }>Dynatrace App?</p>
+          <p className={ styles.paddingTop }><Toggle label="" onText="Yes" offText="No" disabled={true} defaultChecked={AppFw}/></p>
+        </div>
+        <div className= { styles.flex } style={{marginTop: '-5px'}}><i>Want to know more about <a href='https://dynatrace.sharepoint.com/sites/Inno_Days/SitePages/Platform-Apps.aspx'>&nbsp;Dynatrace Apps?</a></i></div>
         <DefaultButton className={ styles.edit } text="Edit your team" allowDisabledFocus onClick={enableEdit}/>
       </div>
     }
@@ -66,6 +71,7 @@ const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, Mem
         MembersId={MembersId}
         Title={Title}
         Project_x0020_link={Project_x0020_link}
+        AppFw={AppFw}
         context={context}
         siteUrl={siteUrl}
         spHttpClient={spHttpClient}
@@ -75,7 +81,8 @@ const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, Mem
         cancelUpdate={cancelUpdate}
       ></TeamForm>
     }
-  </>
-)}
+    </>
+  );
+};
 
 export default TeamCard;

@@ -17,7 +17,7 @@ const descending = (a, b)=> {
     return 1;
   }
   return 0;
-}
+};
  
 const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, context, spHttpClient, siteUrl, listName }: IRegisterIdProps) => {
   const [teams, setTeams] = useState([]);
@@ -51,7 +51,7 @@ const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, co
     spHttpClient.post(`${siteUrl}/_api/web/ensureuser`, SPHttpClient.configurations.v1, { body })
     .then((response: SPHttpClientResponse) => response.json())
     .then((user) => {
-      setUserId(user.Id)
+      setUserId(user.Id);
       setLoading(false);
     });
   };
@@ -66,31 +66,33 @@ const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, co
       headers: {  
         'Accept': 'application/json;odata=nometadata',  
         'Content-type': 'application/json;odata=nometadata',  
-        'odata-version': ''  
+        'odata-version': '',
       },
     })  
     .then((response: SPHttpClientResponse): Promise<ISPListTeams> => response.json())
-    .then((response) => { 
+    .then((response) => {
+      console.log(response);
       return response;
     }) 
-    .then((teams: ISPListTeams): void => setTeams(
-      teams.value.sort(descending).map((team) => ({
+    .then((teamsResponse: ISPListTeams): void => setTeams(
+      teamsResponse.value.sort(descending).map((team) => ({
         Title: team.Title,
         Id: team.Id,
         MembersId: team.MembersId,
         Description: team.Description,
         Project_x0020_link: team.Project_x0020_link,
+        AppFw: team.AppFw,
       }))
     ))
     .catch((error: any): void => setTeams([])); 
-  }
+  };
 
   const setTeam = () => {
     const currentTeam = teams?.filter((team) => team.MembersId?.indexOf(userId) > -1);
 
     setMyTeam(currentTeam.length > 0 ? {...currentTeam[0]} : undefined);
     setLoadingTeam(false);
-  }
+  };
 
   return (
     <>
@@ -108,6 +110,7 @@ const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, co
                       Description={myTeam?.Description}
                       MembersId={myTeam?.MembersId}
                       Project_x0020_link={myTeam?.Project_x0020_link}
+                      AppFw={myTeam?.AppFw}
                       context={context}
                       siteUrl={siteUrl}
                       spHttpClient={spHttpClient}
@@ -147,7 +150,7 @@ const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, co
         ></Teams>
       }
     </>
-  )
-}
+  );
+};
 
 export default RegisterId;

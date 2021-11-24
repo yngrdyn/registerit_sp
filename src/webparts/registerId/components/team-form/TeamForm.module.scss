@@ -18,6 +18,10 @@
 		align-items: center;
 		width: 100%;
 
+		&:last-of-type {
+			margin-bottom: 50px;
+		}
+
 		p {
 			display: flex;
 
@@ -33,12 +37,31 @@
 		p:last-of-type {
 			margin-left: 20px;
 			flex-grow: 1;
+
+			&.paddingTop {
+				padding-top: 10px;
+
+				label {
+					color: white;
+				}
+			}
+		}
+
+		i {
+			color: #d7dbd8;
+		}
+
+		a {
+			color: #d7dbd8;
+
+			&:hover {
+				opacity: 0.7;
+			}
 		}
 	}
 
 	.picker {
 		margin-top: -15px;
-		margin-bottom: 50px;
 
 		label {
 			color: white;
@@ -64,4 +87,14 @@
 		bottom: 0px;
 		right: 135px;
 	}
+}
+
+.loadingIndicator {
+	background: url(https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif)
+		5px no-repeat;
+	height: 30px;
+	position: relative;
+	margin-top: -31px;
+	width: 100%;
+	background-size: contain;
 }

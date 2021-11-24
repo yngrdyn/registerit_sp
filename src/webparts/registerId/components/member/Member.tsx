@@ -26,9 +26,9 @@ const Member: React.FunctionComponent<MemberCardProps> = ({ Id, context, spHttpC
         'odata-version': '',
       },
     })
-    .then((user: SPHttpClientResponse): Promise<any> => user.json())  
-    .then((user: any): void => {
-      setUser(user);
+    .then((userResponse: SPHttpClientResponse): Promise<any> => userResponse.json())  
+    .then((userResponse: any): void => {
+      setUser(userResponse);
     })
     .catch((error: any): void => setUser(undefined));
   };
@@ -42,7 +42,7 @@ const Member: React.FunctionComponent<MemberCardProps> = ({ Id, context, spHttpC
         imageAlt="No presence detected"
       />
     </div>
-  )
-}
+  );
+};
 
 export default Member;

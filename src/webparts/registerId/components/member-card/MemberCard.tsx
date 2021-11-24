@@ -12,7 +12,7 @@ export interface MemberCardProps extends IMember, IRegisterIdProps {}
 const personaStyles = {
   primaryText: { fontSize: '14px', color: 'white' },
   root: { margin: '10px' },
-}
+};
  
 const MemberCard: React.FunctionComponent<MemberCardProps> = ({ Id, context, spHttpClient, siteUrl }: MemberCardProps) => {
   const [userId, _] = useState(Id);
@@ -36,8 +36,8 @@ const MemberCard: React.FunctionComponent<MemberCardProps> = ({ Id, context, spH
       },
     })  
     .then((response: SPHttpClientResponse): Promise<any> => response.json())  
-    .then((user: any): void => {
-      setUser(user);
+    .then((userResponse: any): void => {
+      setUser(userResponse);
     })
     .catch((error: any): void => setUser(undefined)); 
   };
@@ -53,7 +53,7 @@ const MemberCard: React.FunctionComponent<MemberCardProps> = ({ Id, context, spH
         styles={personaStyles}
       />
     </div>
-  )
-}
+  );
+};
 
 export default MemberCard;

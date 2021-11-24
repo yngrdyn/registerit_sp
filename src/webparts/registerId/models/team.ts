@@ -4,6 +4,7 @@ export interface ITeam {
 	Description: string;
 	MembersId: number[];
 	Project_x0020_link: { Description: string; Url: string };
+	AppFw: boolean;
 }
 
 export interface ISPListTeams {

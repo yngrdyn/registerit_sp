@@ -1,3 +1,4 @@
+import { Toggle } from 'office-ui-fabric-react';
 import * as React from 'react';
 import { ITeam } from '../../models/team';
 import { IRegisterIdProps } from '../IRegisterIdProps';
@@ -16,6 +17,7 @@ const Teams: React.FunctionComponent<TeamsProps> = ({ teams, context, siteUrl, s
         <div className={ styles.col }>Team name</div>
         <div className={ styles.col }>Description</div>
         <div className={ styles.col }>Project Url</div>
+        <div className={ styles.col }>Dynatrace App</div>
         <div className={ styles.col }>Team members</div>
       </div>
       { teams.map((team, index) =>
@@ -24,6 +26,9 @@ const Teams: React.FunctionComponent<TeamsProps> = ({ teams, context, siteUrl, s
           <div className={ styles.col }>{ team.Description }</div>
           <div className={ styles.col }>
             <a href={team.Project_x0020_link?.Url}>{team.Project_x0020_link?.Description}</a>
+          </div>
+          <div className={ styles.col }>
+            <Toggle label="" onText="Yes" offText="No" defaultChecked={team.AppFw} disabled={true}/>
           </div>
           <div className={ styles.col }>
             { team.MembersId.map((member) =>
