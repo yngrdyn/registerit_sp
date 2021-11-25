@@ -82,6 +82,7 @@ const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, co
         Description: team.Description,
         Project_x0020_link: team.Project_x0020_link,
         AppFw: team.AppFw,
+        Recruiting: team.Recruiting,
       }))
     ))
     .catch((error: any): void => setTeams([])); 
@@ -111,6 +112,7 @@ const RegisterId: React.FunctionComponent<IRegisterIdProps> = ({ description, co
                       MembersId={myTeam?.MembersId}
                       Project_x0020_link={myTeam?.Project_x0020_link}
                       AppFw={myTeam?.AppFw}
+                      Recruiting={myTeam?.Recruiting}
                       context={context}
                       siteUrl={siteUrl}
                       spHttpClient={spHttpClient}

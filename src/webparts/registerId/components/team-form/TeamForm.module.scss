@@ -18,6 +18,14 @@
 		align-items: center;
 		width: 100%;
 
+		&.switch {
+			margin-top: -20px;
+
+			&:first-of-type {
+				margin-top: -10px;
+			}
+		}
+
 		&:last-of-type {
 			margin-bottom: 50px;
 		}

@@ -17,6 +17,7 @@
 	.members {
 		display: flex;
 		flex-wrap: wrap;
+		margin-bottom: 15px;
 	}
 
 	.flex {
@@ -73,5 +74,13 @@
 		position: absolute;
 		bottom: 0px;
 		right: 0px;
+	}
+
+	.switch {
+		margin-top: -20px;
+
+		&:first-of-type {
+			margin-top: -10px;
+		}
 	}
 }

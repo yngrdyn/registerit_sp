@@ -31,6 +31,9 @@ const Teams: React.FunctionComponent<TeamsProps> = ({ teams, context, siteUrl, s
             <Toggle label="" onText="Yes" offText="No" defaultChecked={team.AppFw} disabled={true}/>
           </div>
           <div className={ styles.col }>
+            { team.Recruiting &&
+              <span className={ styles.recruiting }>Looking for mates</span>
+            }
             { team.MembersId.map((member) =>
               <Member
                 Id={member}

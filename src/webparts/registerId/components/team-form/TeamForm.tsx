@@ -15,12 +15,13 @@ export interface TeamFormProps extends IRegisterIdProps {
 	MembersId?: number[];
 	Project_x0020_link?: { Description: string; Url: string };
   AppFw?: boolean;
+  Recruiting?: boolean;
   reloadTeams: () => void;
   cancelUpdate?: () => void;
 }
  
 const TeamForm: React.FunctionComponent<TeamFormProps> =
-  ({ Id, Description, MembersId, Title, Project_x0020_link, AppFw, context, siteUrl, spHttpClient, listName, reloadTeams, cancelUpdate }: TeamFormProps) => {
+  ({ Id, Description, MembersId, Title, Project_x0020_link, AppFw, Recruiting, context, siteUrl, spHttpClient, listName, reloadTeams, cancelUpdate }: TeamFormProps) => {
     const [members, setMembers] = useState(MembersId ?? []);
     const [name, setName] = useState(Title);
     const [url, setUrl] = useState<{ Description: string; Url: string}>(Project_x0020_link);
@@ -31,6 +32,7 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
     const [appFw, setAppFw] = useState(AppFw);
     const [showWarning, setShowWarning] = useState(false);
     const [showLoadingPeople, setShowLoadingPeople] = useState(true);
+    const [recruiting, setRecruiting] = useState(Recruiting);
 
     useEffect(() => {
       sp.setup({
@@ -58,6 +60,7 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
         'Description': desc,
         'Project_x0020_link': url,
         'AppFw': appFw,
+        'Recruiting': recruiting,
       }); 
 
       spHttpClient.post(`${siteUrl}/_api/web/lists/getbytitle('${listName}')/items`,  
@@ -89,6 +92,7 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
         'Description': desc,
         'Project_x0020_link': url,
         'AppFw': appFw,
+        'Recruiting': recruiting,
       }); 
 
       spHttpClient.post(`${siteUrl}/_api/web/lists/getbytitle('${listName}')/items(${Id})`,  
@@ -131,13 +135,8 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
     };
 
     const validateUrl = (str): boolean => {
-      var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-      return !!pattern.test(str);
+      const urlregex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+      return urlregex.test(str);
     };
 
     const getPeoplePickerItems = (items: any[]) => {
@@ -170,6 +169,10 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
       setAppFw(!appFw);
     };
 
+    const setRecruitingOption = (e) => {
+      setRecruiting(!recruiting);
+    };
+
     const closeModal = () => {
       setShowWarning(false);
     };
@@ -186,7 +189,7 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
           </div>
           <div className= { styles.flex }>
             <p className={ styles.title }>Project Url</p>
-            <p><TextField placeholder="What is the url of your project?" required value={url?.Url} onChange={setProjectUrl} errorMessage={invalidUrl}/></p>
+            <p><TextField placeholder="http(s)://my-id-project-url-com" required value={url?.Url} onChange={setProjectUrl} errorMessage={invalidUrl}/></p>
           </div>
           <p className={ styles.title }>Description</p>
           <p><TextField multiline rows={3} required value={desc} onChange={setProjectDescription}/></p>
@@ -207,7 +210,11 @@ const TeamForm: React.FunctionComponent<TeamFormProps> =
               resolveDelay={1000} />
               { Id && showLoadingPeople && <div className={ styles.loadingIndicator }></div> }
           </p>
-          <div className= { styles.flex }>
+          <div className={ `${styles.flex} ${styles.switch}` }>
+            <p className={ styles.title }>Are you looking for mates?</p>
+            <p className={ styles.paddingTop }><Toggle label="" onText="Yes" offText="No" onChange={setRecruitingOption} defaultChecked={Recruiting}/></p>
+          </div>
+          <div className={ `${styles.flex} ${styles.switch}` }>
             <p className={ styles.title }>Dynatrace App?</p>
             <p className={ styles.paddingTop }><Toggle label="" onText="Yes" offText="No" onChange={setAppFwCategory} defaultChecked={appFw}/></p>
           </div>

@@ -11,7 +11,7 @@ export interface TeamCardProps extends ITeam, IRegisterIdProps {
   reloadTeams: () => void;
 }
  
-const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, MembersId, Title, Project_x0020_link, AppFw, context, siteUrl, spHttpClient, description, listName, reloadTeams }: TeamCardProps) => {
+const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, MembersId, Title, Project_x0020_link, AppFw, Recruiting, context, siteUrl, spHttpClient, description, listName, reloadTeams }: TeamCardProps) => {
   const [editMode, setEditMode] = useState(false);
 
   const enableEdit = () => {
@@ -56,7 +56,11 @@ const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, Mem
               ></MemberCard>)
           }
         </div>
-        <div className= { styles.flex }>
+        <div className={ `${styles.flex} ${styles.switch}` }>
+          <p className={ styles.title }>Are you looking for mates?</p>
+          <p className={ styles.paddingTop }><Toggle label="" onText="Yes" offText="No" disabled={true} defaultChecked={Recruiting}/></p>
+        </div>
+        <div className={ `${styles.flex} ${styles.switch}` }>
           <p className={ styles.title }>Dynatrace App?</p>
           <p className={ styles.paddingTop }><Toggle label="" onText="Yes" offText="No" disabled={true} defaultChecked={AppFw}/></p>
         </div>
@@ -72,6 +76,7 @@ const TeamCard: React.FunctionComponent<TeamCardProps> = ({ Id, Description, Mem
         Title={Title}
         Project_x0020_link={Project_x0020_link}
         AppFw={AppFw}
+        Recruiting={Recruiting}
         context={context}
         siteUrl={siteUrl}
         spHttpClient={spHttpClient}
